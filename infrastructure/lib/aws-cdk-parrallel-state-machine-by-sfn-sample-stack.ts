@@ -94,7 +94,7 @@ export class AwsCdkParrallelStateMachineBySfnSampleStack extends cdk.Stack {
       resultPath: "$.mapResults",
     });
 
-    processMap.iterator(processDataTask);
+    processMap.itemProcessor(processDataTask);
 
     // 成功・失敗の判定ステート
     const success = new sfn.Succeed(this, "Success");
