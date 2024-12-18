@@ -74,6 +74,22 @@ export class AwsCdkParrallelStateMachineBySfnSampleStack extends cdk.Stack {
       outputPath: "$.Payload",
     });
 
+    // Map状態用のデータ整形
+    const prepareMapInput = new sfn.Pass(this, "PrepareMapInput", {
+      parameters: {
+        jobId: sfn.JsonPath.uuid(),
+        items: [
+          {
+            index: 0,
+            location: {
+              "bucket.$": "$.outputLocation.bucket",
+              "key.$": "$.outputLocation.key",
+            },
+          },
+        ],
+      },
+    });
+
     // データ処理タスク
     const processDataTask = new tasks.LambdaInvoke(this, "ProcessData", {
       lambdaFunction: processDataFunction,
@@ -85,7 +101,7 @@ export class AwsCdkParrallelStateMachineBySfnSampleStack extends cdk.Stack {
     // Map状態の定義
     const processMap = new sfn.Map(this, "ProcessMap", {
       maxConcurrency: 100,
-      itemsPath: sfn.JsonPath.stringAt("$.items"),
+      itemsPath: "$.items",
       parameters: {
         "jobId.$": "$.jobId",
         "index.$": "$$.Map.Item.Value.index",
@@ -113,7 +129,10 @@ export class AwsCdkParrallelStateMachineBySfnSampleStack extends cdk.Stack {
       this,
       "ParallelProcessingStateMachine",
       {
-        definition: generateDataTask.next(processMap).next(checkError),
+        definition: generateDataTask
+          .next(prepareMapInput)
+          .next(processMap)
+          .next(checkError),
         logs: {
           destination: logGroup,
           level: sfn.LogLevel.ALL,
