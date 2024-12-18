@@ -6,7 +6,8 @@
     "build": "tsc",
     "watch": "tsc -w",
     "test": "jest",
-    "cdk": "cdk"
+    "cdk": "cdk",
+    "deploy": "cdk deploy"
   },
   "dependencies": {
     "aws-cdk-lib": "^2.0.0",

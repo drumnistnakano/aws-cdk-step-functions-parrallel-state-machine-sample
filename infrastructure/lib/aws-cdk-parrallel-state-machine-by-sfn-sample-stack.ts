@@ -21,9 +21,9 @@ export class AwsCdkParrallelStateMachineBySfnSampleStack extends cdk.Stack {
       this,
       "GenerateDataFunction",
       {
-        entry: "../../server/src/generateData.ts",
+        entry: "../server/src/generateData.ts",
         handler: "handler",
-        runtime: cdk.aws_lambda.Runtime.NODEJS_18_X,
+        runtime: cdk.aws_lambda.Runtime.NODEJS_22_X,
         environment: {
           BUCKET_NAME: bucket.bucketName,
         },
@@ -37,9 +37,9 @@ export class AwsCdkParrallelStateMachineBySfnSampleStack extends cdk.Stack {
       this,
       "ProcessDataFunction",
       {
-        entry: "../../server/src/processData.ts",
+        entry: "../server/src/processData.ts",
         handler: "handler",
-        runtime: cdk.aws_lambda.Runtime.NODEJS_18_X,
+        runtime: cdk.aws_lambda.Runtime.NODEJS_22_X,
         environment: {
           BUCKET_NAME: bucket.bucketName,
         },
