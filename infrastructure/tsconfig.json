@@ -18,8 +18,9 @@
     "experimentalDecorators": true,
     "strictPropertyInitialization": false,
     "outDir": "./dist",
-    "rootDir": "./src",
+    "rootDir": ".",
     "typeRoots": ["./node_modules/@types"]
   },
-  "exclude": ["node_modules", "dist", "cdk.out", "**/*.test.ts"]
+  "include": ["bin/**/*", "lib/**/*"],
+  "exclude": ["node_modules", "dist", "cdk.out"]
 }
