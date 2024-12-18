@@ -9,11 +9,24 @@
   "scripts": {
     "build": "npm run build --workspaces",
     "test": "npm run test --workspaces",
-    "cdk": "cdk"
+    "cdk": "cdk",
+    "format": "biome format --write .",
+    "lint": "biome lint .",
+    "check": "biome check --apply .",
+    "prepare": "husky install"
   },
   "devDependencies": {
+    "@biomejs/biome": "1.5.3",
     "aws-cdk": "^2.0.0",
     "typescript": "^5.0.0",
-    "@types/node": "^20.0.0"
+    "@types/node": "^20.0.0",
+    "husky": "^9.0.0",
+    "lint-staged": "^15.0.0"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx,json,md}": [
+      "biome check --apply",
+      "biome format --write"
+    ]
   }
 }
