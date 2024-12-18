@@ -1,5 +1,5 @@
 {
-  "name": "@aws-cdk-parrallel-state-machine-by-sfn-sample/server",
+  "name": "server",
   "version": "1.0.0",
   "private": true,
   "main": "dist/index.js",

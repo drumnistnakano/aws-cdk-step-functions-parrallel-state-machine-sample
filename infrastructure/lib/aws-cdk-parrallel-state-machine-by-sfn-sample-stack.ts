@@ -1,11 +1,10 @@
 import * as cdk from "aws-cdk-lib";
-import { Construct } from "constructs";
-import * as s3 from "aws-cdk-lib/aws-s3";
 import * as lambda from "aws-cdk-lib/aws-lambda-nodejs";
+import * as logs from "aws-cdk-lib/aws-logs";
+import * as s3 from "aws-cdk-lib/aws-s3";
 import * as sfn from "aws-cdk-lib/aws-stepfunctions";
 import * as tasks from "aws-cdk-lib/aws-stepfunctions-tasks";
-import * as logs from "aws-cdk-lib/aws-logs";
-import * as path from "path";
+import { Construct } from "constructs";
 
 export class AwsCdkParrallelStateMachineBySfnSampleStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
@@ -22,7 +21,7 @@ export class AwsCdkParrallelStateMachineBySfnSampleStack extends cdk.Stack {
       this,
       "GenerateDataFunction",
       {
-        entry: path.join(__dirname, "../../server/src/generateData.ts"),
+        entry: "../../server/src/generateData.ts",
         handler: "handler",
         runtime: cdk.aws_lambda.Runtime.NODEJS_18_X,
         environment: {
@@ -38,7 +37,7 @@ export class AwsCdkParrallelStateMachineBySfnSampleStack extends cdk.Stack {
       this,
       "ProcessDataFunction",
       {
-        entry: path.join(__dirname, "../../server/src/processData.ts"),
+        entry: "../../server/src/processData.ts",
         handler: "handler",
         runtime: cdk.aws_lambda.Runtime.NODEJS_18_X,
         environment: {
