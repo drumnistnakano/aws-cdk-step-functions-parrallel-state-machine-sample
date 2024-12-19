@@ -24,6 +24,8 @@ export class AwsCdkParrallelStateMachineBySfnSampleStack extends cdk.Stack {
         entry: "../server/src/generateData.ts",
         handler: "handler",
         runtime: cdk.aws_lambda.Runtime.NODEJS_22_X,
+        timeout: cdk.Duration.minutes(15),
+        memorySize: 1024,
         environment: {
           BUCKET_NAME: bucket.bucketName,
         },
@@ -72,22 +74,12 @@ export class AwsCdkParrallelStateMachineBySfnSampleStack extends cdk.Stack {
     const generateDataTask = new tasks.LambdaInvoke(this, "GenerateData", {
       lambdaFunction: generateDataFunction,
       outputPath: "$.Payload",
-    });
-
-    // Map状態用のデータ整形
-    const prepareMapInput = new sfn.Pass(this, "PrepareMapInput", {
-      parameters: {
-        jobId: sfn.JsonPath.uuid(),
-        items: [
-          {
-            index: 0,
-            location: {
-              "bucket.$": "$.outputLocation.bucket",
-              "key.$": "$.outputLocation.key",
-            },
-          },
-        ],
-      },
+      payload: sfn.TaskInput.fromObject({
+        jobId: sfn.JsonPath.format(
+          "{}",
+          sfn.JsonPath.stringAt("$$.Execution.StartTime")
+        ),
+      }),
     });
 
     // データ処理タスク
@@ -129,10 +121,7 @@ export class AwsCdkParrallelStateMachineBySfnSampleStack extends cdk.Stack {
       this,
       "ParallelProcessingStateMachine",
       {
-        definition: generateDataTask
-          .next(prepareMapInput)
-          .next(processMap)
-          .next(checkError),
+        definition: generateDataTask.next(processMap).next(checkError),
         logs: {
           destination: logGroup,
           level: sfn.LogLevel.ALL,
