@@ -90,7 +90,7 @@ export class AwsCdkParrallelStateMachineBySfnSampleStack extends cdk.Stack {
       resultPath: "$.error",
     });
 
-    // Map状態の定義
+    // Distributed Mapの定義
     const processMap = new sfn.DistributedMap(this, "ProcessMap", {
       maxConcurrency: 100,
       itemsPath: "$.items",
